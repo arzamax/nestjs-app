@@ -4,6 +4,11 @@
   "description": "",
   "author": "",
   "license": "MIT",
+  "keywords": [
+    "NestJS",
+    "JWT",
+    "tests"
+  ],
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.build.json",
     "format": "prettier --write \"src/**/*.ts\"",
