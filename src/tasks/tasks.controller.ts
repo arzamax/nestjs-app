@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, Logger,
   Param,
   ParseIntPipe,
   Patch,
@@ -24,6 +24,7 @@ import { User } from '../auth/user.entity'
 @Controller('tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
+  private logger = new Logger('TasksController')
   constructor(private taskService: TasksService) {}
 
   @Get()
@@ -31,6 +32,7 @@ export class TasksController {
     @Query(ValidationPipe) getTasksFilterDto: GetTasksFilterDto,
     @GetUser() user,
   ) {
+    this.logger.verbose(`User "${user.username}" is retrieving all tasks. Filters: ${JSON.stringify(getTasksFilterDto)}.`)
     return await this.taskService.getTasks(getTasksFilterDto, user)
   }
 
@@ -47,6 +49,7 @@ export class TasksController {
     @Body(ValidationPipe) createTaskDto: CreateTaskDto,
     @GetUser() user: User,
   ): Promise<Task> {
+    this.logger.verbose(`User "${user.username}" is creating new task. Data: ${JSON.stringify(createTaskDto)}.`)
     return await this.taskService.createTask(createTaskDto, user)
   }
 
@@ -62,7 +65,7 @@ export class TasksController {
   async updateTaskStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body(TaskStatusValidationPipe) updateTaskStatusDto: UpdateTaskStatusDto,
-    @GetUser() user: User
+    @GetUser() user: User,
   ): Promise<Task> {
     return await this.taskService.updateTaskStatus(id, updateTaskStatusDto, user)
   }
